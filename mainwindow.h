@@ -15,6 +15,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    QString file_name;
+    QString file_path;
+
 private slots:
     void on_actionExit_triggered();
 
@@ -35,6 +38,8 @@ private slots:
     void on_actionZoom_Out_triggered();
 
     void on_actionWord_Wrap_triggered();
+
+    void on_actionOpen_triggered();
 
 private:
     Ui::MainWindow *ui;

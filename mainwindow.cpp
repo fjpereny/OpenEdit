@@ -1,12 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QTextEdit>
+#include <QFileDialog>
+#include <sstream>
+#include <string>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    file_name = "New Document";
+    file_path = "";
+
+    window()->setWindowTitle(file_name + " - OpenEdit");
 }
 
 MainWindow::~MainWindow()
@@ -66,4 +75,30 @@ void MainWindow::on_actionWord_Wrap_triggered()
     else {
         ui->mainTextEdit->setWordWrapMode(QTextOption::WrapMode::NoWrap);
     }
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString new_file_path = QFileDialog::getOpenFileName(
+                this,
+                "Open File",
+                "/home/",
+                "All Files (*.*);;"
+                "Text Files (*.txt, *.md, *.doc, *.log"
+                );
+    file_path = new_file_path;
+
+    // Get file name from full file path
+    std::stringstream *stream = new std::stringstream();
+    *stream << file_path.toStdString();
+    std::string segment;
+    std::vector<std::string> segment_list;
+    while(std::getline(*stream, segment, '/'))
+    {
+        segment_list.push_back(segment);
+    }
+    std::string fname = segment_list.back();
+    QString file_name = QString::fromStdString(fname);
+
+    window()->setWindowTitle(file_name + " - OpenEdit");
 }
