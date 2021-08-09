@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/rec">
+        <file>img/1493279_delete_cancel_remove_icon.png</file>
+        <file>img/1493280_copy_clone_documents_duplicate_icon.png</file>
+        <file>img/1493281_close_folder_icon.png</file>
+        <file>img/1493282_cancel_cross_exit_remove_icon.png</file>
+        <file>img/1493283_undo_icon.png</file>
+        <file>img/1493284_redo_icon.png</file>
+        <file>img/1493285_properties_options_preferences_settings_icon.png</file>
+        <file>img/1493286_print_printer_printing_icon.png</file>
+        <file>img/1493287_options_preferences_settings_tool_tools_icon.png</file>
+        <file>img/1493288_help_about_question_icon.png</file>
+        <file>img/1493289_settings_cog_gear_options_preferences_icon.png</file>
+        <file>img/1493290_paste_board_clipboard_task_icon.png</file>
+        <file>img/1493291_cut_scissors_icon.png</file>
+        <file>img/1493292_new_document_page_sheet_icon.png</file>
+        <file>img/1493293_folder_open_file_icon.png</file>
+        <file>img/1493294_save_disk_floppy_guardar_icon.png</file>
+    </qresource>
+</RCC>
