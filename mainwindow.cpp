@@ -8,7 +8,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
+#include <unistd.h>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     file_name = "New Document";
     file_path = "";
+    user_name = getlogin();
 
     window()->setWindowTitle(file_name + " - OpenEdit");
 }
@@ -84,10 +85,11 @@ void MainWindow::on_actionWord_Wrap_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
+    QString user_dir = QString::fromStdString("/home/" + user_name);
     QString new_file_path = QFileDialog::getOpenFileName(
                 this,
                 "Open File",
-                "/home/",
+                user_dir,
                 "All Files (*.*);;"
                 "Text Files (*.txt, *.md, *.doc, *.log"
                 );
@@ -155,30 +157,34 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSave_As_triggered()
 {
+    QString user_dir = QString::fromStdString("/home/" + user_name);
     QString new_file_path = QFileDialog::getSaveFileName(
                 this,
-                "Open File",
-                "/home/",
-                "All Files (*.*);;"
+                "Save File",
+                user_dir,
+                "All Files (*.*, *);;"
                 "Text Files (*.txt, *.md, *.doc, *.log"
                 );
-    file_path = new_file_path;
-
-    std::ofstream output_file;
-    std::string output_file_path = file_path.toStdString();
-    output_file.open(output_file_path);
-    if(output_file.is_open())
+    if(new_file_path.toStdString() != "")
     {
-        std::string data = ui->mainTextEdit->toPlainText().toStdString();
-        output_file << data;
-        output_file.close();
-        window()->setWindowTitle(get_file_name() + " - OpenEdit");
-    }
-    else {
-        QMessageBox *err_msg = new QMessageBox(this);
-        err_msg->setText("Could not save the specified file.");
-        err_msg->setWindowTitle("File Save Error");
-        err_msg->show();
+        file_path = new_file_path;
+
+        std::ofstream output_file;
+        std::string output_file_path = file_path.toStdString();
+        output_file.open(output_file_path);
+        if(output_file.is_open())
+        {
+            std::string data = ui->mainTextEdit->toPlainText().toStdString();
+            output_file << data;
+            output_file.close();
+            window()->setWindowTitle(get_file_name() + " - OpenEdit");
+        }
+        else {
+            QMessageBox *err_msg = new QMessageBox(this);
+            err_msg->setText("Could not save the specified file.");
+            err_msg->setWindowTitle("File Save Error");
+            err_msg->show();
+        }
     }
 }
 

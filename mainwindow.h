@@ -17,6 +17,7 @@ public:
 
     QString file_name;
     QString file_path;
+    std::string user_name;
 
 private slots:
     void on_actionExit_triggered();
