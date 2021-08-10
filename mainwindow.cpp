@@ -2,8 +2,13 @@
 #include "ui_mainwindow.h"
 #include <QTextEdit>
 #include <QFileDialog>
+#include <QErrorMessage>
+#include <QMessageBox>
 #include <sstream>
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <filesystem>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -88,7 +93,97 @@ void MainWindow::on_actionOpen_triggered()
                 );
     file_path = new_file_path;
 
+
     // Get file name from full file path
+    if(file_path != QString(""))
+        {
+            window()->setWindowTitle(get_file_name() + " - OpenEdit");
+
+            std::ifstream file_stream;
+            file_stream.open(file_path.toStdString());
+            if(file_stream.is_open())
+            {
+                std::string data;
+                std::string line;
+                while(std::getline(file_stream, line))
+                {
+                    data += line + '\n';
+                }
+                file_stream.close();
+
+                QString new_text = QString::fromStdString(data);
+                ui->mainTextEdit->clear();
+                ui->mainTextEdit->insertPlainText(new_text);
+            }
+            else {
+                QMessageBox *err_msg = new QMessageBox(this);
+                err_msg->setText("Could not open the specified file.");
+                err_msg->setWindowTitle("File Read Error");
+                err_msg->show();
+            }
+    }
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    if(file_path == "")
+    {
+        on_actionSave_As_triggered();
+    }
+    else {
+            std::ofstream output_file;
+            std::string output_file_path = file_path.toStdString();
+            output_file.open(output_file_path);
+            if(output_file.is_open())
+            {
+                std::string data = ui->mainTextEdit->toPlainText().toStdString();
+                output_file << data;
+                output_file.close();
+                window()->setWindowTitle(get_file_name() + " - OpenEdit");
+            }
+            else
+            {
+                QMessageBox *err_msg = new QMessageBox(this);
+                err_msg->setText("Could not save the specified file.");
+                err_msg->setWindowTitle("File Save Error");
+                err_msg->show();
+            }
+    }
+
+
+}
+
+void MainWindow::on_actionSave_As_triggered()
+{
+    QString new_file_path = QFileDialog::getSaveFileName(
+                this,
+                "Open File",
+                "/home/",
+                "All Files (*.*);;"
+                "Text Files (*.txt, *.md, *.doc, *.log"
+                );
+    file_path = new_file_path;
+
+    std::ofstream output_file;
+    std::string output_file_path = file_path.toStdString();
+    output_file.open(output_file_path);
+    if(output_file.is_open())
+    {
+        std::string data = ui->mainTextEdit->toPlainText().toStdString();
+        output_file << data;
+        output_file.close();
+        window()->setWindowTitle(get_file_name() + " - OpenEdit");
+    }
+    else {
+        QMessageBox *err_msg = new QMessageBox(this);
+        err_msg->setText("Could not save the specified file.");
+        err_msg->setWindowTitle("File Save Error");
+        err_msg->show();
+    }
+}
+
+QString MainWindow::get_file_name()
+{
     std::stringstream *stream = new std::stringstream();
     *stream << file_path.toStdString();
     std::string segment;
@@ -97,8 +192,8 @@ void MainWindow::on_actionOpen_triggered()
     {
         segment_list.push_back(segment);
     }
+    delete stream;
     std::string fname = segment_list.back();
     QString file_name = QString::fromStdString(fname);
-
-    window()->setWindowTitle(file_name + " - OpenEdit");
+    return file_name;
 }
