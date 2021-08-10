@@ -203,3 +203,14 @@ QString MainWindow::get_file_name()
     QString file_name = QString::fromStdString(fname);
     return file_name;
 }
+
+void MainWindow::on_actionNew_triggered()
+{
+    MainWindow *newWindow = new MainWindow();
+    newWindow->show();
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+
+}

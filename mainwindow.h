@@ -48,6 +48,10 @@ private slots:
 
     QString get_file_name();
 
+    void on_actionNew_triggered();
+
+    void on_actionAbout_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
