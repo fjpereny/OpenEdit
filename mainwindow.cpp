@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     file_name = "New Document";
     file_path = "";
+    unsaved_title_active = false;
     user_name = getlogin();
 
     window()->setWindowTitle(file_name + " - OpenEdit");
@@ -99,8 +100,6 @@ void MainWindow::on_actionOpen_triggered()
     // Get file name from full file path
     if(file_path != QString(""))
         {
-            window()->setWindowTitle(get_file_name() + " - OpenEdit");
-
             std::ifstream file_stream;
             file_stream.open(file_path.toStdString());
             if(file_stream.is_open())
@@ -116,6 +115,8 @@ void MainWindow::on_actionOpen_triggered()
                 QString new_text = QString::fromStdString(data);
                 ui->mainTextEdit->clear();
                 ui->mainTextEdit->insertPlainText(new_text);
+                window()->setWindowTitle(get_file_name() + " - OpenEdit");
+                unsaved_title_active = false;
             }
             else {
                 QMessageBox *err_msg = new QMessageBox(this);
@@ -142,6 +143,7 @@ void MainWindow::on_actionSave_triggered()
                 output_file << data;
                 output_file.close();
                 window()->setWindowTitle(get_file_name() + " - OpenEdit");
+                unsaved_title_active = false;
             }
             else
             {
@@ -178,6 +180,7 @@ void MainWindow::on_actionSave_As_triggered()
             output_file << data;
             output_file.close();
             window()->setWindowTitle(get_file_name() + " - OpenEdit");
+            unsaved_title_active = false;
         }
         else {
             QMessageBox *err_msg = new QMessageBox(this);
@@ -213,4 +216,11 @@ void MainWindow::on_actionNew_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
 
+}
+
+void MainWindow::on_mainTextEdit_textChanged()
+{
+    if(!unsaved_title_active)
+        setWindowTitle("*Unsaved Changes* - " + windowTitle());
+    unsaved_title_active = true;
 }

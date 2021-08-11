@@ -18,6 +18,7 @@ public:
     QString file_name;
     QString file_path;
     std::string user_name;
+    bool unsaved_title_active;
 
 private slots:
     void on_actionExit_triggered();
@@ -51,6 +52,8 @@ private slots:
     void on_actionNew_triggered();
 
     void on_actionAbout_triggered();
+
+    void on_mainTextEdit_textChanged();
 
 private:
     Ui::MainWindow *ui;
