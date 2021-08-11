@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QErrorMessage>
 #include <QMessageBox>
+#include <aboutdialog.h>
 #include <sstream>
 #include <string>
 #include <fstream>
@@ -215,7 +216,8 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-
+    AboutDialog *about_dialog = new AboutDialog(this);
+    about_dialog->show();
 }
 
 void MainWindow::on_mainTextEdit_textChanged()
